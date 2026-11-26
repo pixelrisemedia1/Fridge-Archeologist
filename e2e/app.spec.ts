@@ -27,12 +27,13 @@ test('missing shelf item stays unobserved and remains eligible for a duplicate m
   await page.getByRole('link', { name: /inventory/i }).first().click();
   await page.getByLabel('Food name').fill('Yogurt');
   await page.getByRole('button', { name: 'Add item' }).click();
+  await page.getByLabel('Food name').fill('Yogurt');
+  await expect(page.getByRole('button', { name: /update existing yogurt/i })).toBeVisible();
+  await page.getByLabel('Food name').fill('');
   await page.getByRole('button', { name: 'Yogurt' }).click();
   page.once('dialog', dialog => dialog.accept());
   await page.getByRole('button', { name: 'Mark not seen on latest scan' }).click();
   await expect(page.getByText('Not seen · 1')).toBeVisible();
-  await page.getByLabel('Food name').fill('Yogurt');
-  await expect(page.getByRole('button', { name: /update existing yogurt/i })).toBeVisible();
   await page.getByRole('link', { name: /scan history/i }).click();
   await expect(page.getByText('No scans recorded')).toBeVisible();
   await page.getByRole('link', { name: /archaeology timeline/i }).click();
@@ -54,6 +55,7 @@ test('routes, food safety copy, export controls, and narrow mobile navigation re
 });
 
 test('scan route clearly discloses manual review and private photo handling', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('.mobile-nav').getByRole('button', { name: 'Scan' }).click();
   await expect(page.getByText(/photos are processed locally and never uploaded/i)).toBeVisible();
   await expect(page.getByLabel(/photograph or choose shelf images/i)).toBeVisible();
