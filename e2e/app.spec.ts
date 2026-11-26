@@ -105,3 +105,14 @@ test('inventory keeps package, purchase, and opening dates distinct', async ({ p
   await expect(page.getByText('Purchased: 2026-11-24')).toBeVisible();
   await expect(page.getByText('Opened: 2026-11-25')).toBeVisible();
 });
+
+test('food details surface a matching source without treating it as a safety result', async ({ page }) => {
+  await page.locator('.sidebar').getByRole('link', { name: /Inventory/i }).click();
+  await page.getByLabel('Food name').fill('Ground beef');
+  await page.getByRole('button', { name: 'Add item' }).click();
+  await page.getByRole('button', { name: 'Details' }).click();
+  await expect(page.getByRole('heading', { name: 'Official storage reference' })).toBeVisible();
+  await expect(page.getByText(/not calculated from this item's dates or history/i)).toBeVisible();
+  await expect(page.getByText(/Refrigerator at 40°F \/ 4°C or below: 1–2 days/)).toBeVisible();
+  await expect(page.getByRole('link', { name: /FoodSafety.gov Cold Food Storage Chart/i })).toBeVisible();
+});
