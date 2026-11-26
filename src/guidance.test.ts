@@ -22,4 +22,17 @@ describe('official cold-storage reference', () => {
   it('does not invent a match for unsupported foods', () => {
     expect(searchStorageGuidance('dragon fruit')).toEqual([]);
   });
+
+  it('prefers a specific ham preparation over every general ham entry', () => {
+    expect(searchStorageGuidance('sliced ham')).toMatchObject([
+      {condition:'Cooked, store-wrapped, sliced, half, or spiral cut',refrigerator:'3–5 days'},
+    ]);
+    expect(searchStorageGuidance('sliced ham')).toHaveLength(1);
+  });
+
+  it('includes reviewed shellfish and ham rows from the official chart', () => {
+    expect(searchStorageGuidance('shrimp')[0]).toMatchObject({refrigerator:'3–5 days',freezer:'6–18 months'});
+    expect(searchStorageGuidance('canned ham').length).toBeGreaterThan(0);
+    expect(searchStorageGuidance('').length).toBe(49);
+  });
 });
