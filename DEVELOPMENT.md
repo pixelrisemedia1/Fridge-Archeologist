@@ -6,7 +6,7 @@ Updated 2026-11-26. Work continues; this is not a claim that every requested acc
 
 - [x] React, TypeScript, Vite, responsive styling, hash routes that survive reload, GitHub Pages base-relative assets, manifest, service worker, and vector logo.
 - [x] Local guest onboarding with household size, country, currency, units, budget, dietary preferences, allergies, exclusions, reminder preference, and motivation. Optional fields can be skipped.
-- [x] IndexedDB guest data with inventory entry/editing, quantity changes, history, locations, category, brand/barcode fields, entered dates, first/last timestamps, confidence field, status, and local export/delete.
+- [x] IndexedDB guest data with inventory entry/editing, quantity changes, history, locations, category, brand/barcode fields, distinct entered package, purchased, and opened dates, first/last timestamps, confidence field, status, and local export/delete.
 - [x] Normalized duplicate checks, including previously unobserved items and barcode matches. Duplicate submission is blocked until the user updates a match or explicitly chooses a separate package. Items can be marked unobserved only through an explicit, storage-scoped review action and are never changed to consumed/discarded by missing-photo inference.
 - [x] Multi-photo shelf review. TensorFlow.js COCO-SSD can optionally detect general COCO objects on-device. The supported food classes are limited; results have model confidence and require user review. It does not identify most groceries, brands, dates, or quantities and can miss or mislabel items.
 - [x] Financial priority score with entered-date, age, quantity, value, and uncertainty factors; age classification; current inventory value; entered-date value at risk; explicit discard records; explicitly recorded rescue estimates. Scores are not freshness or safety predictions.
@@ -20,8 +20,8 @@ Updated 2026-11-26. Work continues; this is not a claim that every requested acc
 ## Verification evidence
 
 - Unit tests: `npm test` — 22 tests passed locally on 2026-11-26, including four storage-guidance search/source checks.
-- Production build: `npm run build` — passed locally on 2026-11-26. Vite reports large TensorFlow.js chunks; those chunks are loaded only after choosing object recognition. The regular application entry is about 303 kB before gzip in this build.
-- E2E discovery: `npx playwright test --list` — 6 browser tests discovered, including food-reference search and display coverage.
+- Production build: `npm run build` — passed locally on 2026-11-26. Vite reports large TensorFlow.js chunks; those chunks are loaded only after choosing object recognition. The regular application entry is about 304 kB before gzip in this build.
+- E2E discovery: `npx playwright test --list` — 7 browser tests discovered, including food-reference search and distinct date persistence coverage. The date-field change is awaiting hosted Chromium execution.
 - E2E execution: 6 Playwright browser tests passed on GitHub Actions hosted Chromium for commit `69bc0c26034d8f817f3ef8cee9103cc5ad03d3f0` (workflow run #10). Local execution is blocked because the browser download host returned HTTP 403 and the installed `/usr/bin/chromium` launcher points to a missing binary.
 - Deployment: GitHub Actions Pages deploy step reported success for the same commit and assigned `https://pixelrisemedia1.github.io/Fridge-Archeologist/`.
 - Production browser inspection: not completed. The available browser control rejected navigation to the requested public URL under its URL policy. No alternate browser route was used. Hosted E2E exercised the Vite app before deployment, not the public Pages URL.

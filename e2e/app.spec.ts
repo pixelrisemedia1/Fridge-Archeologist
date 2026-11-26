@@ -89,3 +89,19 @@ test('food encyclopedia searches official refrigerated and frozen guidance', asy
   await expect(page.getByText('Opened package', { exact: false }).first()).toBeVisible();
   await expect(page.getByText('Unopened package', { exact: false }).first()).toBeVisible();
 });
+
+test('inventory keeps package, purchase, and opening dates distinct', async ({ page }) => {
+  await page.locator('.sidebar').getByRole('link', { name: /Inventory/i }).click();
+  await page.getByLabel('Food name').fill('Cooked rice');
+  await page.getByLabel('Best by/use by date on package').fill('2026-11-28');
+  await page.getByLabel('Purchased on (optional)').fill('2026-11-24');
+  await page.getByLabel('Opened on (optional)').fill('2026-11-25');
+  await page.getByRole('button', { name: 'Add item' }).click();
+  await expect(page.getByText(/Best by\/use by date entered: 2026-11-28/)).toBeVisible();
+  await expect(page.getByText('Purchased: 2026-11-24')).toBeVisible();
+  await expect(page.getByText('Opened: 2026-11-25')).toBeVisible();
+  await page.reload();
+  await page.locator('.sidebar').getByRole('link', { name: /Inventory/i }).click();
+  await expect(page.getByText('Purchased: 2026-11-24')).toBeVisible();
+  await expect(page.getByText('Opened: 2026-11-25')).toBeVisible();
+});
