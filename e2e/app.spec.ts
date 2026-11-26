@@ -115,7 +115,9 @@ test('food details surface a matching source without treating it as a safety res
   await page.locator('.sidebar').getByRole('link', { name: /Inventory/i }).click();
   await page.getByLabel('Food name').fill('Ground beef');
   await page.getByRole('button', { name: 'Add item' }).click();
+  await expect(page.getByRole('heading', { name: 'Ground beef' })).toBeVisible();
   await page.getByRole('button', { name: 'Details' }).click();
+  await expect(page).toHaveURL(/#\/food-details\//);
   await expect(page.getByRole('heading', { name: 'Official storage reference' })).toBeVisible();
   await expect(page.getByText(/not calculated from this item's dates or history/i)).toBeVisible();
   await expect(page.getByText(/Refrigerator at 40°F \/ 4°C or below: 1–2 days/)).toBeVisible();
@@ -211,4 +213,36 @@ test('financial analytics excludes ordinary consumption and counts explicit resc
   await page.locator('.sidebar').getByRole('link', { name: /Analytics/i }).click();
   rescuedMetric = page.locator('.metric-card').filter({ hasText: 'Explicitly rescued value' });
   await expect(rescuedMetric.locator('strong')).toHaveText('$4.00');
+});
+
+test('meal planning adds missing ingredients and shopping list prevents active duplicates', async ({ page }) => {
+  await page.locator('.sidebar').getByRole('link', { name: /Recipes/i }).click();
+  const card = page.locator('.recipe-card').filter({ has: page.getByRole('heading', { name: 'Flexible vegetable frittata' }) });
+  await card.getByRole('button', { name: 'View recipe' }).click();
+  await card.getByRole('button', { name: 'Add to meal plan' }).click();
+  await page.locator('.sidebar').getByRole('link', { name: /Meal planner/i }).click();
+  await expect(page.getByRole('heading', { name: 'Flexible vegetable frittata' })).toBeVisible();
+  await page.locator('.sidebar').getByRole('link', { name: /Shopping list/i }).click();
+  await expect(page.locator('.shopping-row')).toHaveCount(4);
+  await page.getByRole('textbox', { name: 'New shopping item' }).fill('eggs');
+  await page.getByRole('button', { name: 'Add item' }).click();
+  await expect(page.getByRole('status')).toContainText('eggs is already on the list');
+  await expect(page.locator('.shopping-row')).toHaveCount(4);
+  await page.getByRole('checkbox').first().check();
+  await page.reload();
+  await page.locator('.sidebar').getByRole('link', { name: /Shopping list/i }).click();
+  await expect(page.getByRole('checkbox').first()).toBeChecked();
+});
+
+test('manual barcode association surfaces a possible existing product', async ({ page }) => {
+  await page.locator('.sidebar').getByRole('link', { name: /Inventory/i }).click();
+  await page.getByLabel('Food name').fill('Oat milk');
+  await page.getByLabel('Barcode (optional)').fill('0123456789012');
+  await page.getByRole('button', { name: 'Add item' }).click();
+  await page.getByLabel('Food name').fill('Different oat drink');
+  await page.getByLabel('Barcode (optional)').fill('0123456789012');
+  await expect(page.getByRole('button', { name: /Update existing Oat milk/i })).toBeVisible();
+  await page.getByRole('button', { name: 'Add item' }).click();
+  await expect(page.getByRole('status')).toContainText(/possible duplicate found/i);
+  await expect(page.locator('.item-card')).toHaveCount(1);
 });
