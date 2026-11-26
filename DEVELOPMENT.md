@@ -21,8 +21,8 @@ Updated 2026-11-26. Work continues; this is not a claim that every requested acc
 
 - Unit tests: `npm test` — 22 tests passed locally on 2026-11-26, including four storage-guidance search/source checks.
 - Production build: `npm run build` — passed locally on 2026-11-26. Vite reports large TensorFlow.js chunks; those chunks are loaded only after choosing object recognition. The regular application entry is about 303 kB before gzip in this build.
-- E2E discovery: `npx playwright test --list` — 6 browser tests discovered, including a new food-reference search and display check. This change is awaiting hosted Chromium execution.
-- E2E execution: 5 Playwright browser tests passed on GitHub Actions hosted Chromium for commit `b77460af2561ff212503fdb557793972d27fec4e` (workflow run #8). Local execution is blocked because the browser download host returned HTTP 403 and the installed `/usr/bin/chromium` launcher points to a missing binary.
+- E2E discovery: `npx playwright test --list` — 6 browser tests discovered, including food-reference search and display coverage.
+- E2E execution: 6 Playwright browser tests passed on GitHub Actions hosted Chromium for commit `69bc0c26034d8f817f3ef8cee9103cc5ad03d3f0` (workflow run #10). Local execution is blocked because the browser download host returned HTTP 403 and the installed `/usr/bin/chromium` launcher points to a missing binary.
 - Deployment: GitHub Actions Pages deploy step reported success for the same commit and assigned `https://pixelrisemedia1.github.io/Fridge-Archeologist/`.
 - Production browser inspection: not completed. The available browser control rejected navigation to the requested public URL under its URL policy. No alternate browser route was used. Hosted E2E exercised the Vite app before deployment, not the public Pages URL.
 - Accessibility audit, on-device detector accuracy benchmark, OCR accuracy benchmark, and camera hardware check remain outstanding.
