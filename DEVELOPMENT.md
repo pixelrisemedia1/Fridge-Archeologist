@@ -21,8 +21,8 @@ Updated 2026-11-26. Work continues; this is not a claim that every requested acc
 
 - Unit tests: `npm test` — 25 tests passed locally on 2026-11-26, including four storage-guidance and three receipt-parser checks.
 - Production build: `npm run build` — passed locally on 2026-11-26. Vite reports large TensorFlow.js chunks; those chunks are loaded only after choosing object recognition. The regular application entry is about 310 kB before gzip in this build.
-- E2E discovery: `npx playwright test --list` — 9 browser tests discovered, including a real OCR fixture flow, editable receipt review, and a check that OCR does not update inventory automatically. The new receipt browser test is awaiting hosted Chromium execution.
-- E2E execution: 8 Playwright browser tests passed on GitHub Actions hosted Chromium for commit `39eb4c9c1c2bb1e9e37c1bbcc9d71739cc2ae4d8` (workflow run #14). Local execution is blocked because the browser download host returned HTTP 403 and the installed `/usr/bin/chromium` launcher points to a missing binary.
+- E2E discovery: `npx playwright test --list` — 9 browser tests discovered, including a real OCR fixture flow, editable receipt review, and a check that OCR does not update inventory automatically.
+- E2E execution: 9 Playwright browser tests passed on GitHub Actions hosted Chromium for commit `9136b88e84224fbb3b1606ec37257b065d925b34` (workflow run #16). Local execution is blocked because the browser download host returned HTTP 403 and the installed `/usr/bin/chromium` launcher points to a missing binary.
 - Deployment: GitHub Actions Pages deploy step reported success for the same commit and assigned `https://pixelrisemedia1.github.io/Fridge-Archaeologist/`.
 - Production browser inspection: not completed. The available browser control rejected navigation to the requested public URL under its URL policy. No alternate browser route was used. Hosted E2E exercised the Vite app before deployment, not the public Pages URL.
 - Accessibility audit, on-device detector accuracy benchmark, OCR accuracy benchmark, and camera hardware check remain outstanding.
