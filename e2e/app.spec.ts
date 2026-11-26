@@ -116,3 +116,16 @@ test('food details surface a matching source without treating it as a safety res
   await expect(page.getByText(/Refrigerator at 40°F \/ 4°C or below: 1–2 days/)).toBeVisible();
   await expect(page.getByRole('link', { name: /FoodSafety.gov Cold Food Storage Chart/i })).toBeVisible();
 });
+
+test('receipt OCR creates an editable review and does not change inventory automatically', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.locator('.sidebar').getByRole('link', { name: /Inventory/i }).click();
+  await expect(page.locator('.item-card')).toHaveCount(0);
+  await page.locator('.sidebar').getByRole('link', { name: /Receipt scanner/i }).click();
+  await page.getByLabel(/Choose receipt image/i).setInputFiles('e2e/fixtures/receipt.png');
+  await expect(page.getByLabel('Editable OCR text')).toBeVisible({ timeout: 75_000 });
+  await expect(page.getByRole('region', { name: 'Receipt review' })).toBeVisible();
+  await expect(page.getByLabel('Receipt store')).toBeVisible();
+  await page.locator('.sidebar').getByRole('link', { name: /Inventory/i }).click();
+  await expect(page.locator('.item-card')).toHaveCount(0);
+});
