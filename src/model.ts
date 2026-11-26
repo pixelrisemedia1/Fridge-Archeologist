@@ -8,14 +8,16 @@ export type Item = {
 };
 export type Event = { id: string; item: string; action: string; date: string; value: number; quantity?: number; reason?: string; location?: Location; category?: string };
 export type ShoppingItem = { id: string; name: string; done: boolean; quantity?: number; category?: string; price?: number; source?: string };
+export type NotificationPreferences = { enteredDates: boolean; weeklyScan: boolean; mealPlanning: boolean; shopping: boolean; weeklySummary: boolean };
 export type State = {
   items: Item[]; events: Event[]; shopping: ShoppingItem[]; onboarded: boolean;
   currency: string; household: number; country?: string; unitSystem?: 'metric' | 'imperial';
   groceryBudget?: number; preferences?: string[]; allergies?: string[]; excluded?: string[];
   reminder?: string; motivation?: string; favorites?: string[]; plans?: Record<string, string[]>;
   xp?: number; achievements?: string[]; theme?: 'light'|'dark'|'system'; scans?: {id:string;date:string;location:Location;photoCount:number;notes:string}[];
+  notifications?: NotificationPreferences;
 };
-export const initial: State = { items: [], events: [], shopping: [], onboarded: false, currency: 'USD', household: 1, country: 'United States', unitSystem: 'imperial', groceryBudget: 0, preferences: [], allergies: [], excluded: [], reminder: 'Weekly', motivation: 'Save money', favorites: [], plans: {}, xp: 0, achievements: [], theme: 'system', scans: [] };
+export const initial: State = { items: [], events: [], shopping: [], onboarded: false, currency: 'USD', household: 1, country: 'United States', unitSystem: 'imperial', groceryBudget: 0, preferences: [], allergies: [], excluded: [], reminder: 'Weekly', motivation: 'Save money', favorites: [], plans: {}, xp: 0, achievements: [], theme: 'system', scans: [], notifications:{enteredDates:true,weeklyScan:true,mealPlanning:true,shopping:true,weeklySummary:true} };
 export const day = 86_400_000;
 export function age(i: Item, now = Date.now()) { return Math.max(0, Math.floor((now - Date.parse(i.first)) / day)); }
 export function classification(n: number) { return n <= 2 ? 'Fresh Discovery' : n <= 5 ? 'Established Resident' : n <= 10 ? 'Forgotten Treasure' : n <= 20 ? 'Ancient Artifact' : n <= 30 ? 'Relic' : 'Museum Exhibit'; }

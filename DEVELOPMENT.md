@@ -7,10 +7,10 @@ Updated 2026-11-26. Work continues; this is not a claim that every requested acc
 - [x] React, TypeScript, Vite, responsive styling, hash routes that survive reload, GitHub Pages base-relative assets, manifest, service worker, and vector logo.
 - [x] Local guest onboarding with household size, country, currency, units, budget, dietary preferences, allergies, exclusions, reminder preference, and motivation. Optional fields can be skipped.
 - [x] IndexedDB guest data with inventory entry/editing, quantity changes, history, locations, category, brand/barcode fields, entered dates, first/last timestamps, confidence field, status, and local export/delete.
-- [x] Normalized duplicate suggestions, including previously unobserved items; separate packages remain separate records. Items can be marked unobserved only through an explicit review action and are not changed to consumed/discarded by missing-photo inference.
+- [x] Normalized duplicate checks, including previously unobserved items and barcode matches. Duplicate submission is blocked until the user updates a match or explicitly chooses a separate package. Items can be marked unobserved only through an explicit, storage-scoped review action and are never changed to consumed/discarded by missing-photo inference.
 - [x] Multi-photo shelf review. TensorFlow.js COCO-SSD can optionally detect general COCO objects on-device. The supported food classes are limited; results have model confidence and require user review. It does not identify most groceries, brands, dates, or quantities and can miss or mislabel items.
 - [x] Financial priority score with entered-date, age, quantity, value, and uncertainty factors; age classification; current inventory value; entered-date value at risk; explicit discard records; explicitly recorded rescue estimates. Scores are not freshness or safety predictions.
-- [x] Rescue Center, editable item details, archaeology event timeline filters, refrigerator/freezer/pantry views, shopping list, five original recipe ideas, meal planner, favorites field in schema, challenges/achievements, local weekly reports, CSV/JSON export, and configurable local notification preference.
+- [x] Rescue Center, editable item detail routes, archaeology event timeline filters (date, category, storage, event), refrigerator/freezer/pantry views, shopping list, five original recipe ideas with favorites and suggested substitutions, meal planner, persistent XP/achievement fields with starter unlocks, explicit rescued-value recording, eight-week waste/rescue charts, category totals, CSV/JSON export, and configurable in-app reminder types.
 - [x] ZXing camera barcode scanner with manual entry and Open Food Facts lookup. Tesseract.js receipt OCR runs in the browser and exposes editable raw OCR text. OCR lines can be staged as unverified shopping entries; store/date/price parsing and automatic inventory updates are not implemented.
 - [x] Food safety disclaimer with links to USDA FoodKeeper, FoodSafety.gov cold-storage charts, and USDA FSIS leftovers guidance.
 - [x] Marketing/landing, help, contact, privacy, terms, plans (Pro clearly unavailable), SEO and social metadata, sitemap, robots.txt.
@@ -19,22 +19,25 @@ Updated 2026-11-26. Work continues; this is not a claim that every requested acc
 
 ## Verification evidence
 
-- Unit tests: `npm test` — 18 tests passed locally on 2026-11-26.
-- Production build: `npm run build` — passed locally on 2026-11-26. Vite reports large TensorFlow.js chunks; those chunks are loaded only after choosing object recognition. The regular application entry is about 291 kB before gzip in this build.
-- E2E discovery: `npx playwright test --list` — 4 browser tests discovered.
-- E2E execution: **not passed locally**. The Playwright browser download host returned HTTP 403 in this environment, and the installed `/usr/bin/chromium` launcher points to a missing browser binary. GitHub Actions will run the suite on its hosted runner after push. Do not treat the suite as passed until that workflow completes successfully.
-- Deployment: the previous repository Pages workflow run succeeded before these changes. The new version is not marked deployed until its post-commit workflow and live URL are checked.
-- Accessibility audit, on-device detector accuracy benchmark, OCR accuracy benchmark, camera hardware check, and production browser verification remain outstanding.
+- Unit tests: `npm test` — 18 tests passed locally on 2026-11-26, including the current source changes.
+- Production build: `npm run build` — passed locally on 2026-11-26. Vite reports large TensorFlow.js chunks; those chunks are loaded only after choosing object recognition. The regular application entry is about 298 kB before gzip in this build.
+- E2E discovery: `npx playwright test --list` — 5 browser tests discovered, including new analytics and reminder persistence coverage. The current source changes are awaiting hosted Chromium execution.
+- E2E execution: 4 Playwright browser tests passed on GitHub Actions hosted Chromium for commit `c73400aacf168fc04c9399f57e869a68553d54a8` (workflow run #7). Local execution is blocked because the browser download host returned HTTP 403 and the installed `/usr/bin/chromium` launcher points to a missing binary.
+- Deployment: GitHub Actions Pages deploy step reported success for the same commit and assigned `https://pixelrisemedia1.github.io/Fridge-Archeologist/`.
+- Production browser inspection: not completed. The available browser control rejected navigation to the requested public URL under its URL policy. No alternate browser route was used. Hosted E2E exercised the Vite app before deployment, not the public Pages URL.
+- Accessibility audit, on-device detector accuracy benchmark, OCR accuracy benchmark, and camera hardware check remain outstanding.
 
 ## Known limitations and external services
 
-- Cloud accounts, authentication, household invitations, synchronization, and cross-account isolation are not configured; there are no Supabase credentials assigned to this repository. Guest mode is fully local.
+- Cloud accounts, authentication, household invitations, synchronization, account data migration, and cross-account isolation are not configured; there are no Supabase credentials assigned to this repository. Guest mode is fully local.
 - Food guidance is source-linked reference copy, not a structured FoodKeeper data import or item-specific shelf-life calculator. No status, image, entered date, or score can determine safety.
 - COCO-SSD only covers a small set of general objects useful as food suggestions. It cannot perform reliable full-fridge inventory or count sealed packages. Model code is Apache-2.0. Its weights are downloaded from Google-hosted TensorFlow model storage on first use; availability and browser storage limits are external.
 - Barcode lookup sends the barcode to the Open Food Facts public API. The community catalog may omit or contain incorrect product data. Network and service policies apply.
 - Tesseract.js receipt OCR uses a free open-source engine and English language data downloaded on demand. OCR output is untrusted text and must be manually checked. This is not a receipt parser.
-- Notifications are browser permission plus in-app preferences. There is no server push; background delivery is not guaranteed.
-- Analytics are limited to the actual data recorded on this device. Historical weekly/monthly trend charts, estimated unit costs, nutrition data, and household comparisons are not yet implemented. Consumed goods are not automatically counted as savings.
+- Notifications are in-app reminders evaluated while the app is open, plus browser permission handling. There is no scheduler or server push; background delivery is not guaranteed.
+- Analytics use only actual entries on this device. Eight-week waste/rescue charts and current category totals are available. Unit cost histories, nutrition data, household comparisons, and full month-by-month reports are not implemented. Consumed items count as rescued value only after explicit user action.
+- Recipe serving scaling is not implemented. Allergy/exclusion filtering is a conservative string check, not a guarantee; users must verify packaging labels and recipe safety.
+- No accessibility conformance audit has been run. The suite checks basic responsive navigation and key app flows, not every route/control or screen reader.
 - The proposed $3.99/month or $29.99/year plan is unavailable; no checkout is configured.
 - No paid API, trial, or payment service is configured. GitHub Pages, Open Food Facts, hosted model files, and browser storage are subject to third-party availability, free-service policies, and device/browser quotas.
 
