@@ -267,3 +267,19 @@ test('recordkeeping achievements, streak, and challenge rewards persist without 
   await expect(page.getByText('Record a known item value').locator('..')).toContainText('Completed');
   await expect(page.locator('.metric-card').filter({ hasText: 'Excavation XP' }).locator('strong')).toHaveText('14');
 });
+
+test('every primary navigation route opens a working screen', async ({ page }) => {
+  const routes = [
+    'Dashboard', 'Landing page', 'Inventory', 'Scan', 'Scan history', 'Archaeology timeline',
+    'Fridge', 'Freezer', 'Pantry', 'Rescue Center', 'Recipes', 'Meal planner', 'Shopping list',
+    'Barcode scanner', 'Receipt scanner', 'Food encyclopedia', 'Fridge Graveyard',
+    'Savings dashboard', 'Analytics', 'Weekly reports', 'Challenges', 'Achievements',
+    'Household', 'Notifications', 'Profile', 'Settings', 'Plans', 'Help', 'Contact',
+    'Privacy', 'Terms', 'Food safety'
+  ];
+  for (const route of routes) {
+    await page.locator('.sidebar').getByRole('link', { name: new RegExp(route, 'i') }).click();
+    await expect(page.getByText('This section is being prepared')).toHaveCount(0);
+    await expect(page.locator('main h1')).toBeVisible();
+  }
+});
