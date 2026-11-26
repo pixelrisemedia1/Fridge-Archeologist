@@ -76,3 +76,16 @@ test('analytics and reminder preferences render and save locally', async ({ page
   await page.locator('.sidebar').getByRole('link', { name: /Notifications/i }).click();
   await expect(page.getByLabel('Meal planning nudge')).not.toBeChecked();
 });
+
+test('food encyclopedia searches official refrigerated and frozen guidance', async ({ page }) => {
+  await page.locator('.sidebar').getByRole('link', { name: /Food encyclopedia/i }).click();
+  const search = page.getByRole('searchbox', { name: 'Search storage guidance' });
+  await search.fill('minced beef');
+  await expect(page.getByRole('heading', { name: 'Ground meat and ground poultry' })).toBeVisible();
+  await expect(page.getByText(/Refrigerator .*1–2 days/)).toBeVisible();
+  await expect(page.getByText(/Freezer .*3–4 months/)).toBeVisible();
+  await expect(page.getByText(/Freezer storage periods below are for quality/i)).toBeVisible();
+  await search.fill('hot dog');
+  await expect(page.getByText('Opened package', { exact: false }).first()).toBeVisible();
+  await expect(page.getByText('Unopened package', { exact: false }).first()).toBeVisible();
+});
