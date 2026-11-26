@@ -165,7 +165,7 @@ test('graveyard records explicit waste amount, location, age, and reason', async
 });
 
 test('onboarding preferences persist and guest data can be exported and erased', async ({ page }) => {
-  await page.getByRole('button', { name: /Settings/i }).click();
+  await page.getByRole('button', { name: 'Settings', exact: true }).click();
   page.once('dialog', dialog => dialog.accept());
   await page.getByRole('button', { name: 'Delete all local data' }).click();
   await expect(page.getByRole('heading', { name: /Your fridge has secrets/i })).toBeVisible();
@@ -178,8 +178,37 @@ test('onboarding preferences persist and guest data can be exported and erased',
   await page.getByRole('button', { name: /Profile/i }).click();
   await expect(page.getByText('3 people · Canada · CAD')).toBeVisible();
   await expect(page.getByText('Allergies: peanuts')).toBeVisible();
-  await page.getByRole('button', { name: /Settings/i }).click();
+  await page.getByRole('button', { name: 'Settings', exact: true }).click();
   const download = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export JSON' }).click();
   expect((await download).suggestedFilename()).toBe('fridge-archaeologist-data.json');
+});
+
+test('landing page labels the sample data and explains pricing and installation', async ({ page }) => {
+  await page.goto('/#/landing-page');
+  await expect(page.getByRole('region', { name: 'Illustrative sample dashboard' })).toContainText('illustrative sample only');
+  await expect(page.getByRole('heading', { name: 'Brown rice' })).toBeVisible();
+  await expect(page.getByText('INSTALLATION', { exact: true })).toBeVisible();
+  await expect(page.getByText(/Archaeologist Pro is proposed and unavailable/i)).toBeVisible();
+  await expect(page.getByRole('link', { name: /Open the issue tracker/i })).toBeVisible();
+});
+
+test('financial analytics excludes ordinary consumption and counts explicit rescue records', async ({ page }) => {
+  await page.locator('.sidebar').getByRole('link', { name: /Inventory/i }).click();
+  await page.getByLabel('Food name').fill('Bread used normally');
+  await page.getByLabel(/unit value/i).fill('3');
+  await page.getByRole('button', { name: 'Add item' }).click();
+  await page.getByRole('button', { name: 'Mark used' }).click();
+  await page.locator('.sidebar').getByRole('link', { name: /Analytics/i }).click();
+  let rescuedMetric = page.locator('.metric-card').filter({ hasText: 'Explicitly rescued value' });
+  await expect(rescuedMetric.locator('strong')).toHaveText('$0.00');
+  await page.locator('.sidebar').getByRole('link', { name: /Inventory/i }).click();
+  await page.getByLabel('Food name').fill('Beans rescued');
+  await page.getByLabel(/unit value/i).fill('4');
+  await page.getByRole('button', { name: 'Add item' }).click();
+  await page.locator('.sidebar').getByRole('link', { name: /Rescue Center/i }).click();
+  await page.getByRole('button', { name: 'Record rescued value' }).click();
+  await page.locator('.sidebar').getByRole('link', { name: /Analytics/i }).click();
+  rescuedMetric = page.locator('.metric-card').filter({ hasText: 'Explicitly rescued value' });
+  await expect(rescuedMetric.locator('strong')).toHaveText('$4.00');
 });
