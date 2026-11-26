@@ -21,8 +21,8 @@ Updated 2026-11-26. Work continues; this is not a claim that every requested acc
 
 - Unit tests: `npm test` — 30 tests passed locally on 2026-11-26, including storage-guidance, receipt-parser, and recipe-scaling checks.
 - Production build: `npm run build` — passed locally on 2026-11-26. Vite reports large TensorFlow.js chunks; those chunks are loaded only after choosing object recognition. The regular application entry is about 317 kB before gzip in this build.
-- E2E discovery: `npx playwright test --list` — 10 browser tests discovered, including real OCR review and persisted recipe serving adjustments. The 49-row chart expansion is awaiting hosted Chromium execution.
-- E2E execution: 10 Playwright browser tests passed on GitHub Actions hosted Chromium for commit `cb0f2128bd2a63338c2cd94d28b405391c5fb3a2` (workflow run #20). Run #18 exposed an exact-accessible-name selector mismatch in the new recipe test; the selector was corrected and the full suite then passed in runs #19 and #20. Local browser execution is blocked because the download host returned HTTP 403 and the installed `/usr/bin/chromium` launcher points to a missing binary.
+- E2E discovery: `npx playwright test --list` — 10 browser tests discovered, including real OCR review and persisted recipe serving adjustments.
+- E2E execution: 10 Playwright browser tests passed on GitHub Actions hosted Chromium for commit `8da1b746dcf824ef95b42891ba8ca6e0e7859ce6` (workflow run #23). Run #18 exposed an exact-accessible-name selector mismatch in the recipe test; after correcting the selector, the full suite passed in runs #19, #20, and #23.
 - Deployment: GitHub Actions Pages deploy step reported success for the same commit and assigned `https://pixelrisemedia1.github.io/Fridge-Archaeologist/`.
 - Production browser inspection: not completed. The available browser control rejected navigation to the requested public URL under its URL policy. No alternate browser route was used. Hosted E2E exercised the Vite app before deployment, not the public Pages URL.
 - Accessibility audit, on-device detector accuracy benchmark, OCR accuracy benchmark, and camera hardware check remain outstanding.
