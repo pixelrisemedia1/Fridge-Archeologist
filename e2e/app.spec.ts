@@ -246,3 +246,24 @@ test('manual barcode association surfaces a possible existing product', async ({
   await expect(page.getByRole('status')).toContainText(/possible duplicate found/i);
   await expect(page.locator('.item-card')).toHaveCount(1);
 });
+
+test('recordkeeping achievements, streak, and challenge rewards persist without rewarding consumption', async ({ page }) => {
+  await page.locator('.sidebar').getByRole('link', { name: /Inventory/i }).click();
+  await page.getByLabel('Food name').fill('Lentils');
+  await page.getByRole('button', { name: 'Add item' }).click();
+  await page.getByLabel('Food name').fill('Oats with known price');
+  await page.getByLabel(/unit value/i).fill('2');
+  await page.getByRole('button', { name: 'Add item' }).click();
+  await page.locator('.sidebar').getByRole('link', { name: /Achievements/i }).click();
+  await expect(page.getByText('Junior Archaeologist').locator('..')).toContainText('Earned');
+  await expect(page.getByText('Financial Excavator').locator('..')).toContainText('Earned');
+  await page.locator('.sidebar').getByRole('link', { name: /Challenges/i }).click();
+  await expect(page.getByRole('heading', { name: 'Record a known item value' })).toBeVisible();
+  await expect(page.locator('.metric-card').filter({ hasText: 'Recordkeeping streak' })).toBeVisible();
+  await page.getByRole('button', { name: 'Claim +10 XP' }).click();
+  await expect(page.locator('.metric-card').filter({ hasText: 'Excavation XP' }).locator('strong')).toHaveText('14');
+  await page.reload();
+  await page.locator('.sidebar').getByRole('link', { name: /Challenges/i }).click();
+  await expect(page.getByText('Record a known item value').locator('..')).toContainText('Completed');
+  await expect(page.locator('.metric-card').filter({ hasText: 'Excavation XP' }).locator('strong')).toHaveText('14');
+});
