@@ -1,0 +1,1 @@
+import {openDB} from 'idb'; import {initial,type State} from './model'; const db=()=>openDB('fridge-archaeologist',1,{upgrade(d){d.createObjectStore('state')}}); export async function load():Promise<State>{return (await (await db()).get('state','current'))??initial} export async function save(s:State){await (await db()).put('state',s,'current')}
