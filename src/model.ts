@@ -6,7 +6,7 @@ export type Item = {
   category?: string; brand?: string; barcode?: string; unit?: string;
   opened?: string; purchased?: string; confidence?: number; note?: string;
 };
-export type Event = { id: string; item: string; action: string; date: string; value: number; quantity?: number; reason?: string; location?: Location; category?: string };
+export type Event = { id: string; item: string; itemId?: string; action: string; date: string; value: number; quantity?: number; reason?: string; location?: Location; category?: string };
 export type ShoppingItem = { id: string; name: string; done: boolean; quantity?: number; category?: string; price?: number; source?: string };
 export type NotificationPreferences = { enteredDates: boolean; weeklyScan: boolean; mealPlanning: boolean; shopping: boolean; weeklySummary: boolean };
 export type State = {

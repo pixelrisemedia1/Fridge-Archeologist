@@ -149,3 +149,37 @@ test('recipe servings scale ingredient amounts and persist locally', async ({ pa
   await expect(reloadedCard.getByLabel('Servings for Flexible vegetable frittata')).toHaveValue('4');
   await expect(reloadedCard.getByRole('listitem').filter({ hasText: '8 eggs' })).toBeVisible();
 });
+
+test('graveyard records explicit waste amount, location, age, and reason', async ({ page }) => {
+  await page.locator('.sidebar').getByRole('link', { name: /Inventory/i }).click();
+  await page.getByLabel('Food name').fill('Wilted spinach');
+  await page.getByLabel('Quantity').fill('2');
+  await page.getByLabel(/unit value/i).fill('3');
+  await page.getByRole('button', { name: 'Add item' }).click();
+  page.once('dialog', dialog => dialog.accept('Wilted before dinner'));
+  await page.getByRole('button', { name: 'Discard' }).click();
+  await page.locator('.sidebar').getByRole('link', { name: /Fridge Graveyard/i }).click();
+  await expect(page.getByRole('heading', { name: 'Wilted spinach' })).toBeVisible();
+  await expect(page.getByText(/2 item · Fridge · 0 tracked day\(s\)/)).toBeVisible();
+  await expect(page.getByText(/Reason: Wilted before dinner · Recorded loss: \$6\.00/)).toBeVisible();
+});
+
+test('onboarding preferences persist and guest data can be exported and erased', async ({ page }) => {
+  await page.getByRole('button', { name: /Settings/i }).click();
+  page.once('dialog', dialog => dialog.accept());
+  await page.getByRole('button', { name: 'Delete all local data' }).click();
+  await expect(page.getByRole('heading', { name: /Your fridge has secrets/i })).toBeVisible();
+  await page.getByLabel('Household size').fill('3');
+  await page.getByLabel('Country').fill('Canada');
+  await page.getByLabel('Currency').selectOption('CAD');
+  await page.getByLabel('Allergies').fill('peanuts');
+  await page.getByRole('button', { name: /Continue privately as guest/i }).click();
+  await page.reload();
+  await page.getByRole('button', { name: /Profile/i }).click();
+  await expect(page.getByText('3 people · Canada · CAD')).toBeVisible();
+  await expect(page.getByText('Allergies: peanuts')).toBeVisible();
+  await page.getByRole('button', { name: /Settings/i }).click();
+  const download = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export JSON' }).click();
+  expect((await download).suggestedFilename()).toBe('fridge-archaeologist-data.json');
+});
