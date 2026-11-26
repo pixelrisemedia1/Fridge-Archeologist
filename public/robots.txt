@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pixelrisemedia1.github.io/Fridge-Archeologist/sitemap.xml
