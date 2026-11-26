@@ -68,6 +68,11 @@ test('analytics and reminder preferences render and save locally', async ({ page
   await page.locator('.sidebar').getByRole('link', { name: /Analytics/i }).click();
   await expect(page.getByRole('heading', { name: 'Analytics' })).toBeVisible();
   await expect(page.locator('.chart-column')).toHaveCount(8);
+  await page.getByRole('button', { name: '12 months' }).click();
+  await expect(page.locator('.chart-column')).toHaveCount(12);
+  await expect(page.getByRole('group', { name: 'Analytics time period' }).getByRole('button', { name: '12 months' })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: '8 weeks' }).click();
+  await expect(page.locator('.chart-column')).toHaveCount(8);
   await page.locator('.sidebar').getByRole('link', { name: /Notifications/i }).click();
   const mealReminder = page.getByLabel('Meal planning nudge');
   await expect(mealReminder).toBeChecked();
