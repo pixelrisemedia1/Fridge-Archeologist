@@ -21,9 +21,9 @@ Updated 2026-11-26. Work continues; this is not a claim that every requested acc
 
 - Unit tests: `npm test` — 22 tests passed locally on 2026-11-26, including four storage-guidance search/source checks.
 - Production build: `npm run build` — passed locally on 2026-11-26. Vite reports large TensorFlow.js chunks; those chunks are loaded only after choosing object recognition. The regular application entry is about 304 kB before gzip in this build.
-- E2E discovery: `npx playwright test --list` — 7 browser tests discovered, including food-reference search and distinct date persistence coverage. The date-field change is awaiting hosted Chromium execution.
-- E2E execution: 6 Playwright browser tests passed on GitHub Actions hosted Chromium for commit `69bc0c26034d8f817f3ef8cee9103cc5ad03d3f0` (workflow run #10). Local execution is blocked because the browser download host returned HTTP 403 and the installed `/usr/bin/chromium` launcher points to a missing binary.
-- Deployment: GitHub Actions Pages deploy step reported success for the same commit and assigned `https://pixelrisemedia1.github.io/Fridge-Archeologist/`.
+- E2E discovery: `npx playwright test --list` — 7 browser tests discovered, including food-reference search and distinct date persistence coverage.
+- E2E execution: 7 Playwright browser tests passed on GitHub Actions hosted Chromium for commit `a01e487110cdcf32ea2d5f0582537db32fbb6878` (workflow run #12). Local execution is blocked because the browser download host returned HTTP 403 and the installed `/usr/bin/chromium` launcher points to a missing binary.
+- Deployment: GitHub Actions Pages deploy step reported success for the same commit and assigned `https://pixelrisemedia1.github.io/Fridge-Archaeologist/`.
 - Production browser inspection: not completed. The available browser control rejected navigation to the requested public URL under its URL policy. No alternate browser route was used. Hosted E2E exercised the Vite app before deployment, not the public Pages URL.
 - Accessibility audit, on-device detector accuracy benchmark, OCR accuracy benchmark, and camera hardware check remain outstanding.
 
@@ -31,6 +31,7 @@ Updated 2026-11-26. Work continues; this is not a claim that every requested acc
 
 - Cloud accounts, authentication, household invitations, synchronization, account data migration, and cross-account isolation are not configured; there are no Supabase credentials assigned to this repository. Guest mode is fully local.
 - Food guidance includes 19 selected rows from the FoodSafety.gov cold-storage chart, not a complete FoodKeeper data import or item-specific shelf-life calculator. No status, image, entered date, or score can determine safety.
+- Package, purchase, and opening dates are stored separately, but there is no automatic storage-life countdown from purchase/opening dates; printed package dates are treated as user-entered reminders, not safety guarantees.
 - COCO-SSD only covers a small set of general objects useful as food suggestions. It cannot perform reliable full-fridge inventory or count sealed packages. Model code is Apache-2.0. Its weights are downloaded from Google-hosted TensorFlow model storage on first use; availability and browser storage limits are external.
 - Barcode lookup sends the barcode to the Open Food Facts public API. The community catalog may omit or contain incorrect product data. Network and service policies apply.
 - Tesseract.js receipt OCR uses a free open-source engine and English language data downloaded on demand. OCR output is untrusted text and must be manually checked. This is not a receipt parser.
