@@ -23,12 +23,15 @@ test('guest adds, persists, edits, and marks an item used', async ({ page }) => 
   await expect(page.getByText('No discarded food recorded')).toBeVisible();
 });
 
-test('missing shelf item stays unobserved and remains eligible for a duplicate match', async ({ page }) => {
+test('missing shelf item stays unobserved and duplicate entries require a choice', async ({ page }) => {
   await page.getByRole('link', { name: /inventory/i }).first().click();
   await page.getByLabel('Food name').fill('Yogurt');
   await page.getByRole('button', { name: 'Add item' }).click();
   await page.getByLabel('Food name').fill('Yogurt');
   await expect(page.getByRole('button', { name: /update existing yogurt/i })).toBeVisible();
+  await page.getByRole('button', { name: 'Add item' }).click();
+  await expect(page.getByRole('status')).toContainText(/possible duplicate found/i);
+  await expect(page.locator('.item-card')).toHaveCount(1);
   await page.getByLabel('Food name').fill('');
   await page.getByRole('button', { name: 'Yogurt' }).click();
   page.once('dialog', dialog => dialog.accept());
