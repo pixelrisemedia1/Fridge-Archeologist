@@ -129,3 +129,18 @@ test('receipt OCR creates an editable review and does not change inventory autom
   await page.locator('.sidebar').getByRole('link', { name: /Inventory/i }).click();
   await expect(page.locator('.item-card')).toHaveCount(0);
 });
+
+test('recipe servings scale ingredient amounts and persist locally', async ({ page }) => {
+  await page.locator('.sidebar').getByRole('link', { name: /^Recipes$/i }).click();
+  const card = page.locator('.recipe-card').filter({ has: page.getByRole('heading', { name: 'Flexible vegetable frittata' }) });
+  await card.getByRole('button', { name: 'View recipe' }).click();
+  const servings = card.getByLabel('Servings for Flexible vegetable frittata');
+  await servings.selectOption('4');
+  await expect(card.getByRole('listitem').filter({ hasText: '8 eggs' })).toBeVisible();
+  await page.reload();
+  await page.locator('.sidebar').getByRole('link', { name: /^Recipes$/i }).click();
+  const reloadedCard = page.locator('.recipe-card').filter({ has: page.getByRole('heading', { name: 'Flexible vegetable frittata' }) });
+  await reloadedCard.getByRole('button', { name: 'View recipe' }).click();
+  await expect(reloadedCard.getByLabel('Servings for Flexible vegetable frittata')).toHaveValue('4');
+  await expect(reloadedCard.getByRole('listitem').filter({ hasText: '8 eggs' })).toBeVisible();
+});

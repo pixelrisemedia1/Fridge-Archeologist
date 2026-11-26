@@ -13,11 +13,11 @@ export type State = {
   items: Item[]; events: Event[]; shopping: ShoppingItem[]; onboarded: boolean;
   currency: string; household: number; country?: string; unitSystem?: 'metric' | 'imperial';
   groceryBudget?: number; preferences?: string[]; allergies?: string[]; excluded?: string[];
-  reminder?: string; motivation?: string; favorites?: string[]; plans?: Record<string, string[]>;
+  reminder?: string; motivation?: string; favorites?: string[]; plans?: Record<string, string[]>; recipeServings?: Record<string, number>;
   xp?: number; achievements?: string[]; theme?: 'light'|'dark'|'system'; scans?: {id:string;date:string;location:Location;photoCount:number;notes:string}[];
   notifications?: NotificationPreferences;
 };
-export const initial: State = { items: [], events: [], shopping: [], onboarded: false, currency: 'USD', household: 1, country: 'United States', unitSystem: 'imperial', groceryBudget: 0, preferences: [], allergies: [], excluded: [], reminder: 'Weekly', motivation: 'Save money', favorites: [], plans: {}, xp: 0, achievements: [], theme: 'system', scans: [], notifications:{enteredDates:true,weeklyScan:true,mealPlanning:true,shopping:true,weeklySummary:true} };
+export const initial: State = { items: [], events: [], shopping: [], onboarded: false, currency: 'USD', household: 1, country: 'United States', unitSystem: 'imperial', groceryBudget: 0, preferences: [], allergies: [], excluded: [], reminder: 'Weekly', motivation: 'Save money', favorites: [], plans: {}, recipeServings:{}, xp: 0, achievements: [], theme: 'system', scans: [], notifications:{enteredDates:true,weeklyScan:true,mealPlanning:true,shopping:true,weeklySummary:true} };
 export const day = 86_400_000;
 export function age(i: Item, now = Date.now()) { return Math.max(0, Math.floor((now - Date.parse(i.first)) / day)); }
 export function classification(n: number) { return n <= 2 ? 'Fresh Discovery' : n <= 5 ? 'Established Resident' : n <= 10 ? 'Forgotten Treasure' : n <= 20 ? 'Ancient Artifact' : n <= 30 ? 'Relic' : 'Museum Exhibit'; }
