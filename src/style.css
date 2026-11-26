@@ -10,3 +10,5 @@ html[data-theme=dark]{--cream:#17241e;--paper:#202f27;--line:#35453a;--muted:#b1
 
 .chart-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.chart-heading h2{margin:0}.period-controls{display:flex;gap:6px}.period-controls button{padding:8px 11px;font-size:11px}.period-controls button.selected{background:var(--green);color:#fff}
 @media(max-width:520px){.chart-heading{align-items:flex-start;flex-direction:column}.period-controls{width:100%}.period-controls button{flex:1}}
+
+@media(max-width:760px){.chart-columns.months{overflow-x:auto;justify-content:flex-start}.chart-columns.months .chart-column{flex:0 0 34px}}
