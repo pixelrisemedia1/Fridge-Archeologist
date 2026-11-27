@@ -30,3 +30,5 @@ html[data-theme=dark] .upload-zone{background:#2d3d32;color:#dce8d9;border-color
 html[data-theme=dark] .notice-card a{color:#dce8d9}@media(prefers-color-scheme:dark){html[data-theme=system] .notice-card a{color:#dce8d9}}
 
 html[data-theme=dark] .recipe-meta{color:#dce8d9}@media(prefers-color-scheme:dark){html[data-theme=system] .recipe-meta{color:#dce8d9}}
+
+html[data-theme=dark] .report-card p{color:#dce8d9}@media(prefers-color-scheme:dark){html[data-theme=system] .report-card p{color:#dce8d9}}
