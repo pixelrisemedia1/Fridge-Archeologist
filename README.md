@@ -6,7 +6,7 @@ A local-first food inventory, meal-planning, and waste-recording PWA. Guest data
 
 ## Run locally
 
-Requires Node.js 22 or newer.
+Requires Node.js 24 or newer.
 
 ```sh
 npm ci
