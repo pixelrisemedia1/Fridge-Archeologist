@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:production": "playwright test e2e/production.spec.ts"
   },
   "dependencies": {
     "@tensorflow-models/coco-ssd": "^2.2.3",

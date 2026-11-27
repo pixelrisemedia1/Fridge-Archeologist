@@ -278,7 +278,8 @@ test('every primary navigation route opens a working screen', async ({ page }) =
     'Privacy', 'Terms', 'Food safety'
   ];
   for (const route of routes) {
-    await page.locator('.sidebar').getByRole('link', { name: new RegExp(route, 'i') }).click();
+    const href = `#/${route.toLowerCase().replaceAll(' ', '-')}`;
+    await page.locator(`.sidebar a[href="${href}"]`).click();
     await expect(page.getByText('This section is being prepared')).toHaveCount(0);
     await expect(page.locator('main h1')).toBeVisible();
   }
