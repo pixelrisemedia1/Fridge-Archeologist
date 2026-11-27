@@ -16,28 +16,35 @@ test('primary destinations meet WCAG 2.1 A and AA automated checks', async ({ pa
 
   const failures: { theme: string; route: string; violations: { id: string; target: string[]; message: string }[] }[] = [];
 
-  for (const theme of ['light', 'dark'] as const) {
-    await page.evaluate((value) => { document.documentElement.dataset.theme = value; }, theme);
+  const themes = [
+    { label: 'light', value: 'light' as const, colorScheme: 'light' as const },
+    { label: 'dark', value: 'dark' as const, colorScheme: 'dark' as const },
+    { label: 'system-dark', value: 'system' as const, colorScheme: 'dark' as const },
+  ];
+
+  for (const theme of themes) {
+    await page.emulateMedia({ colorScheme: theme.colorScheme });
+    await page.evaluate((value) => { document.documentElement.dataset.theme = value; }, theme.value);
     for (const route of routes) {
-    const href = `#/${route.toLowerCase().replaceAll(' ', '-')}`;
-    await page.locator(`.sidebar a[href="${href}"]`).click();
-    await expect(page.locator('main h1')).toBeVisible();
-    const result = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-      .analyze();
-    if (result.violations.length) {
-      failures.push({
-        theme,
-        route,
-        violations: result.violations.flatMap((violation) =>
-          violation.nodes.map((node) => ({
-            id: violation.id,
-            target: node.target,
-            message: node.failureSummary ?? violation.help,
-          })),
-        ),
-      });
-    }
+      const href = `#/${route.toLowerCase().replaceAll(' ', '-')}`;
+      await page.locator(`.sidebar a[href="${href}"]`).click();
+      await expect(page.locator('main h1')).toBeVisible();
+      const result = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze();
+      if (result.violations.length) {
+        failures.push({
+          theme: theme.label,
+          route,
+          violations: result.violations.flatMap((violation) =>
+            violation.nodes.map((node) => ({
+              id: violation.id,
+              target: node.target,
+              message: node.failureSummary ?? violation.help,
+            })),
+          ),
+        });
+      }
     }
   }
 
