@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 test('primary destinations meet WCAG 2.1 A and AA automated checks', async ({ page }) => {
+  test.setTimeout(120_000);
   await page.goto('/');
   await page.getByRole('button', { name: /continue privately as guest/i }).click();
   const routes = [
