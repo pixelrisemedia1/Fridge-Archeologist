@@ -24,3 +24,5 @@ html[data-theme=dark] .landing-hero .eyebrow{color:#516852}html[data-theme=dark]
 html[data-theme=dark] .landing-sections a{color:#dce8d9}@media(prefers-color-scheme:dark){html[data-theme=system] .landing-sections a{color:#dce8d9}}
 
 html[data-theme=dark] label{color:#dce8d9}@media(prefers-color-scheme:dark){html[data-theme=system] label{color:#dce8d9}}
+
+html[data-theme=dark] .upload-zone{background:#2d3d32;color:#dce8d9;border-color:#607464}html[data-theme=dark] .upload-zone span{color:#dce8d9}html[data-theme=dark] .upload-zone strong{color:#e2ebdc}html[data-theme=dark] .upload-icon{color:#b8d3b8!important}@media(prefers-color-scheme:dark){html[data-theme=system] .upload-zone{background:#2d3d32;color:#dce8d9;border-color:#607464}html[data-theme=system] .upload-zone span{color:#dce8d9}html[data-theme=system] .upload-zone strong{color:#e2ebdc}html[data-theme=system] .upload-icon{color:#b8d3b8!important}}
