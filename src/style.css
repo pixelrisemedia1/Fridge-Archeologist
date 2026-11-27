@@ -32,3 +32,5 @@ html[data-theme=dark] .notice-card a{color:#dce8d9}@media(prefers-color-scheme:d
 html[data-theme=dark] .recipe-meta{color:#dce8d9}@media(prefers-color-scheme:dark){html[data-theme=system] .recipe-meta{color:#dce8d9}}
 
 html[data-theme=dark] .report-card p{color:#dce8d9}@media(prefers-color-scheme:dark){html[data-theme=system] .report-card p{color:#dce8d9}}
+
+html[data-theme=dark] .chart-column small,html[data-theme=dark] .chart-legend{color:#dce8d9}@media(prefers-color-scheme:dark){html[data-theme=system] .chart-column small,html[data-theme=system] .chart-legend{color:#dce8d9}}
