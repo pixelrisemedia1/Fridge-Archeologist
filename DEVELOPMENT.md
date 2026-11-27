@@ -29,7 +29,7 @@ Updated 2026-11-27. Work continues; this is not a claim that every requested acc
 
 ## Known limitations and external services
 
-- The automated Axe WCAG 2.1 A/AA check passes on 32 primary destinations. A manual screen-reader conformance audit, detector accuracy benchmark on representative refrigerator photos, OCR accuracy benchmark across receipt formats, and physical camera hardware checks have not been completed. Playwright checks primary routes, key accessible names, core flows, and a narrow mobile viewport; this is not a full manual accessibility audit.
+- The automated Axe WCAG 2.1 A/AA check passed on 32 primary destinations in the light theme. The same 32-route check is being expanded to dark theme in CI. A manual screen-reader conformance audit, detector accuracy benchmark on representative refrigerator photos, OCR accuracy benchmark across receipt formats, and physical camera hardware checks have not been completed. Playwright checks primary routes, key accessible names, core flows, and a narrow mobile viewport; this is not a full manual accessibility audit.
 
 - Cloud accounts, authentication, household invitations, synchronization, account data migration, and cross-account isolation are not configured; there are no Supabase credentials assigned to this repository. Guest mode is fully local.
 - Food guidance includes 49 selected rows from the FoodSafety.gov cold-storage chart, not a complete FoodKeeper data import or item-specific shelf-life calculator. The public USDA JSON endpoint returned HTTP 403 during this audit, so the full dataset could not be retrieved for safe offline inclusion. No status, image, entered date, or score can determine safety.
@@ -40,7 +40,7 @@ Updated 2026-11-27. Work continues; this is not a claim that every requested acc
 - Notifications are in-app reminders evaluated while the app is open, plus browser permission handling. There is no scheduler or server push; background delivery is not guaranteed.
 - Analytics use only actual entries on this device. Eight-week and twelve-calendar-month waste/rescue views and current category totals are available. Unit cost histories, nutrition data, household comparisons, and richer financial reports are not implemented. Consumed items count as rescued value only after explicit user action.
 - Recipe quantities are approximate amounts for five original ideas and scale with servings. Allergy/exclusion filtering is a conservative string check, not a guarantee; users must verify packaging labels and recipe safety.
-- The automated accessibility scan covers 32 primary destinations; it does not replace manual review of every control, keyboard path, zoom setting, or screen reader.
+- The dark-theme accessibility scan across the 32 primary destinations is implemented and awaiting hosted CI verification. Automated scans do not replace manual review of every control, keyboard path, zoom setting, or screen reader.
 - The proposed $3.99/month or $29.99/year plan is unavailable; no checkout is configured.
 - No paid API, trial, or payment service is configured. GitHub Pages, Open Food Facts, hosted model files, and browser storage are subject to third-party availability, free-service policies, and device/browser quotas.
 

@@ -13,13 +13,16 @@ test('primary destinations meet WCAG 2.1 A and AA automated checks', async ({ pa
     'Privacy', 'Terms', 'Food safety'
   ];
 
-  for (const route of routes) {
+  for (const theme of ['light', 'dark'] as const) {
+    await page.evaluate((value) => { document.documentElement.dataset.theme = value; }, theme);
+    for (const route of routes) {
     const href = `#/${route.toLowerCase().replaceAll(' ', '-')}`;
     await page.locator(`.sidebar a[href="${href}"]`).click();
     await expect(page.locator('main h1')).toBeVisible();
     const result = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();
-    expect(result.violations, `${route} accessibility violations`).toEqual([]);
+    expect(result.violations, `${theme} ${route} accessibility violations`).toEqual([]);
+    }
   }
 });
