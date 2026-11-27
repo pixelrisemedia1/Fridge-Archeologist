@@ -284,3 +284,27 @@ test('every primary navigation route opens a working screen', async ({ page }) =
     await expect(page.locator('main h1')).toBeVisible();
   }
 });
+test('mobile core screens fit narrow viewports in light, dark, and system-dark themes', async ({ page }) => {
+  const routes = ['Dashboard', 'Inventory', 'Scan', 'Rescue Center', 'Recipes', 'Shopping list', 'Savings dashboard', 'Settings'];
+  const themes = [
+    { label: 'light', value: 'light', colorScheme: 'light' as const },
+    { label: 'dark', value: 'dark', colorScheme: 'dark' as const },
+    { label: 'system-dark', value: 'system', colorScheme: 'dark' as const },
+  ];
+
+  for (const width of [390, 320]) {
+    await page.setViewportSize({ width, height: 844 });
+    await expect(page.locator('.mobile-nav')).toBeVisible();
+    for (const theme of themes) {
+      await page.emulateMedia({ colorScheme: theme.colorScheme });
+      await page.evaluate((value) => { document.documentElement.dataset.theme = value; }, theme.value);
+      for (const route of routes) {
+        const href = `#/${route.toLowerCase().replaceAll(' ', '-')}`;
+        await page.evaluate((hash) => { window.location.hash = hash; }, href);
+        await expect(page.locator('main h1')).toBeVisible();
+        const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+        expect(scrollWidth, `${theme.label} ${width}px ${route} horizontal overflow`).toBeLessThanOrEqual(width);
+      }
+    }
+  }
+});
