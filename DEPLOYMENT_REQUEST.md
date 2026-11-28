@@ -1,0 +1,1 @@
+Deployment requested on 2026-11-28. This marker triggers the repository's existing deployment workflow; it does not change the application.
